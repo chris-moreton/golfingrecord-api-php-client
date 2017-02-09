@@ -1,6 +1,6 @@
 # Companies House API PHP Client
 
-You will need an API key to use this client. To get an API key, go to https://developer.companieshouse.gov.uk/api/docs/index/gettingStarted/apikey_authorisation.html
+You will need a client secret to use this client. As the API is current incomplete, I'm not yet giving them out.
 
 Add to project using Composer
 -----------------------------
