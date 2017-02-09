@@ -1,4 +1,6 @@
-# Companies House API PHP Client
+# Golfing Record API PHP Client
+
+This is a PHP client for the Golfing Record API which allows users of the Golfing Record service to manage their accounts and data programmatically.
 
 You will need a client secret to use this client. As the API is current incomplete, I'm not yet giving them out.
 
