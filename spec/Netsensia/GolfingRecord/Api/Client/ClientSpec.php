@@ -23,24 +23,29 @@ class ClientSpec extends ObjectBehavior
     
     function it_can_get_user_details_from_an_email_address()
     {
-        $this->getUserDetails('chris@chrismo.com')->containKeyAndValue('id', 28);
+        $this->getUserDetails('chris@chrismo.com')->shouldContainKeyAndValue('id', 28);
     }
 
     function it_can_get_user_details_from_an_id()
     {
-        $this->getUserDetails(28)->containKeyAndValue('email', 'chris@chrismo.com');
+        $this->getUserDetails(28)->shouldContainKeyAndValue('email', 'chris@chrismo.com');
     }
-    
+
     function it_can_verify_a_user_password()
     {
-        $this->verifyPassword('chris@chrismo.com', 'asdasd');
+        $this->verifyPassword('chris@chrismo.com', 'asdasd')->shouldContainKeyAndValue('verified', true);
+    }
+    
+    function it_can_find_that_a_user_password_is_wrong()
+    {
+        $this->verifyPassword('chris@chrismo.com', 'qweqwe')->shouldContainKeyAndValue('verified', false);
     }
     
     public function getMatchers()
     {
         return [
             'containKeyAndValue' => function ($subject, $key, $value) {
-                return property_exists($subject, $key) && $subject->$key == $value;
+                return !empty($subject) && property_exists($subject, $key) && $subject->$key == $value;
             }
         ];
     }

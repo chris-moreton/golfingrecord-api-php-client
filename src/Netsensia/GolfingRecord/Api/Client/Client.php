@@ -48,12 +48,14 @@ class Client
      * User
      * 
      * /user/{id}
-     *
+     * 
+     * @param $id The user id or email
+     * 
      * @return boolean|mixed
      */
     public function getUserDetails($id)
     {
-        $response = $this->client()->request('GET', $this->apiBaseUri . '/user/' . $id, $this->opts());
+        $response = $this->client()->request('GET', $this->apiBaseUri . '/v1/users/' . $id, $this->opts());
     
         if( $response->getStatusCode() != 200 ){
             return $this->log($response, false);
@@ -63,6 +65,33 @@ class Client
     
         $this->log($response, true);
     
+        return $jsonDecode;
+    }
+
+    /**
+     * Verify password
+     * 
+     * @param string $email
+     * @param string $password
+     * 
+     * @return boolean|mixed
+     */
+    public function verifyPassword($email, $password)
+    {
+        $response = $this->client()->request('POST', $this->apiBaseUri . '/v1/users/' . $email . '/passwordcheck', $this->opts([
+            'form_params' => [
+                'password' => $password,
+            ],
+        ]));
+        
+        if( $response->getStatusCode() != 200 ){
+            return $this->log($response, false);
+        }
+        
+        $jsonDecode = json_decode($response->getBody());
+        
+        $this->log($response, true);
+        
         return $jsonDecode;
     }
 }
