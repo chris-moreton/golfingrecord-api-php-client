@@ -16,6 +16,8 @@ class Client
     /**
     * oAuth2 Password Grant
     * 
+    * /oauth/token
+    * 
     * @return boolean|mixed
     */
     public function passwordGrant($username, $password, $clientSecret, $scope = '*')
@@ -42,4 +44,25 @@ class Client
         return $jsonDecode;
     }
     
+    /**
+     * User
+     * 
+     * /user/{id}
+     *
+     * @return boolean|mixed
+     */
+    public function getUserDetails($id)
+    {
+        $response = $this->client()->request('GET', $this->apiBaseUri . '/user/' . $id, $this->opts());
+    
+        if( $response->getStatusCode() != 200 ){
+            return $this->log($response, false);
+        }
+    
+        $jsonDecode = json_decode($response->getBody());
+    
+        $this->log($response, true);
+    
+        return $jsonDecode;
+    }
 }

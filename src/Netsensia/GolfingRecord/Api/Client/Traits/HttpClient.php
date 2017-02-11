@@ -66,7 +66,7 @@ trait HttpClient
 
     }
     
-    protected function opts($options) {
+    protected function opts($options = []) {
         if (!empty($this->apiKey)) {
             return array_merge(
                 $options,
