@@ -18,33 +18,55 @@ class ClientSpec extends ObjectBehavior
             config('USERNAME'),
             config('PASSWORD'),
             config('PASSWORD_GRANT_CLIENT_SECRET')
-        )->shouldContainKeyAndValue('token_type', 'Bearer');
+        )->shouldBeAnObjectContainingKeyAndValue('token_type', 'Bearer');
     }
     
     function it_can_get_user_details_from_an_email_address()
     {
-        $this->getUserDetails('chris@chrismo.com')->shouldContainKeyAndValue('id', 28);
+        $this->getUserDetails('chris@chrismo.com')->shouldBeAnObjectContainingKeyAndValue('id', config('USER_ID'));
     }
 
     function it_can_get_user_details_from_an_id()
     {
-        $this->getUserDetails(28)->shouldContainKeyAndValue('email', 'chris@chrismo.com');
+        $this->getUserDetails(config('USER_ID'))->shouldBeAnObjectContainingKeyAndValue('email', 'chris@chrismo.com');
     }
 
     function it_can_verify_a_user_password()
     {
-        $this->verifyPassword('chris@chrismo.com', 'asdasd')->shouldContainKeyAndValue('verified', true);
+        $this->verifyPassword('chris@chrismo.com', config('PASSWORD'))->shouldBeAnObjectContainingKeyAndValue('verified', true);
     }
     
     function it_can_find_that_a_user_password_is_wrong()
     {
-        $this->verifyPassword('chris@chrismo.com', 'qweqwe')->shouldContainKeyAndValue('verified', false);
+        $this->verifyPassword('chris@chrismo.com', 'qweqwe')->shouldBeAnObjectContainingKeyAndValue('verified', false);
+    }
+    
+    function it_can_update_a_user_remember_token()
+    {
+        $r = md5(rand(0, PHP_INT_MAX));
+        $this->updateUserDetails(config('USER_ID'), [
+            'remember_token' => $r,
+        ])->shouldBeAnObjectContainingKeyAndValue('remember_token', $r);
+    }
+    
+    function it_will_report_an_attempt_to_update_an_invalid_user_field()
+    {
+        $this->shouldThrow('GuzzleHttp\Exception\ClientException')->during('updateUserDetails', [config('USER_ID'), [
+            'remembers_token' => 123,
+        ]]);
+    }
+    
+    function it_will_report_an_attempt_to_update_an_invalid_user()
+    {
+        $this->shouldThrow('GuzzleHttp\Exception\ClientException')->during('updateUserDetails', [-1, [
+            'remember_token' => 123,
+        ]]);
     }
     
     public function getMatchers()
     {
         return [
-            'containKeyAndValue' => function ($subject, $key, $value) {
+            'beAnObjectContainingKeyAndValue' => function ($subject, $key, $value) {
                 return !empty($subject) && property_exists($subject, $key) && $subject->$key == $value;
             }
         ];

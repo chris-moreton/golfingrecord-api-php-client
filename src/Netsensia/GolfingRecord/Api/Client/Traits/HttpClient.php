@@ -70,7 +70,11 @@ trait HttpClient
         if (!empty($this->apiKey)) {
             return array_merge(
                 $options,
-                ['headers' => ['Authorization' => 'Bearer ' . $this->apiKey]]
+                ['headers' => [
+                        'Authorization' => 'Bearer ' . $this->apiKey,
+                        'Content-Type' => 'application/json',
+                    ]
+                ]
             );
         } else {
             return $options;

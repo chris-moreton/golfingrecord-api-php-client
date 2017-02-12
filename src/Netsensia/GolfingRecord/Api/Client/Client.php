@@ -79,7 +79,7 @@ class Client
     public function verifyPassword($email, $password)
     {
         $response = $this->client()->request('POST', $this->apiBaseUri . '/v1/users/' . $email . '/passwordcheck', $this->opts([
-            'form_params' => [
+            'json' => [
                 'password' => $password,
             ],
         ]));
@@ -92,6 +92,33 @@ class Client
         
         $this->log($response, true);
         
+        return $jsonDecode;
+    }
+    
+    /**
+     * Verify password
+     *
+     * @param string $id
+     * @param array $details
+     *
+     * @return boolean|mixed
+     */
+    public function updateUserDetails($id, array $details)
+    {
+        $options = $this->opts([
+            'json' => $details,
+        ]);
+        
+        $response = $this->client()->request('PUT', $this->apiBaseUri . '/v1/users/' . $id, $options);
+        
+        if( $response->getStatusCode() != 200 ){
+            return $this->log($response, false);
+        }
+    
+        $jsonDecode = json_decode($response->getBody());
+        
+        $this->log($response, true);
+    
         return $jsonDecode;
     }
 }
