@@ -96,7 +96,7 @@ class Client
     }
     
     /**
-     * Verify password
+     * Update user details
      *
      * @param string $id
      * @param array $details
@@ -117,6 +117,33 @@ class Client
     
         $jsonDecode = json_decode($response->getBody());
         
+        $this->log($response, true);
+    
+        return $jsonDecode;
+    }
+    
+    /**
+     * Create user
+     *
+     * @param string $id
+     * @param array $details [email|name|password]
+     *
+     * @return boolean|mixed
+     */
+    public function createUser(array $details)
+    {
+        $options = $this->opts([
+            'json' => $details,
+        ]);
+    
+        $response = $this->client()->request('POST', $this->apiBaseUri . '/v1/users', $options);
+    
+        if( $response->getStatusCode() != 200 ){
+            return $this->log($response, false);
+        }
+    
+        $jsonDecode = json_decode($response->getBody());
+    
         $this->log($response, true);
     
         return $jsonDecode;
