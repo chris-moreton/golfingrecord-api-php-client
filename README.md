@@ -2,7 +2,7 @@
 
 This is a PHP client for the Golfing Record API which allows users of the Golfing Record service to manage their accounts and data programmatically.
 
-You will need a client secret to use this client. As the API is current incomplete, I'm not yet giving them out.
+You will need a client secret to use this client. The API is currently incomplete, so client secrets are not available for request.
 
 Add to project using Composer
 -----------------------------
@@ -11,12 +11,6 @@ composer require chris-moreton/golfingrecord-api-php-client
     
 Usage
 -----
-
-## oAuth2 Password grant
-
-    $client = new Client();
-    $response = $client->passwordGrant($username, $password, $clientSecret, $scope);
-    
 
 Development
 -----------
