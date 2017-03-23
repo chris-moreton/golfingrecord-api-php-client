@@ -36,4 +36,28 @@ class Client
     
         return $jsonDecode;
     }
+    
+    /**
+     * User courses
+     *
+     * /user/{id}/courses/{courseId}
+     *
+     * @param $id The user id or email
+     *
+     * @return boolean|mixed
+     */
+    public function getUserCourses($id, $courseId = '')
+    {
+        $response = $this->client()->request('GET', $this->apiBaseUri . '/v1/users/' . $id . '/courses/' . $courseId, $this->opts());
+    
+        if( $response->getStatusCode() != 200 ){
+            return $this->log($response, false);
+        }
+    
+        $jsonDecode = json_decode($response->getBody());
+    
+        $this->log($response, true);
+    
+        return $jsonDecode;
+    }
 }

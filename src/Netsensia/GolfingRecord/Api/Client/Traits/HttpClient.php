@@ -1,7 +1,7 @@
 <?php
 namespace Netsensia\GolfingRecord\Api\Client\Traits;
 
-use Netsensia\GolfingRecord\Api\Client\Common\Guzzle\Client as GuzzleClient;
+use GuzzleHttp\Client as GuzzleClient;
 
 trait HttpClient
 {
