@@ -9,11 +9,6 @@ class Client
     use HttpClient;
     
     /**
-     * The base URI for the API
-     */
-    private $apiBaseUri = 'http://api.golfingrecord.local';
-    
-    /**
      * User
      * 
      * /user/{id}
@@ -22,9 +17,15 @@ class Client
      * 
      * @return boolean|mixed
      */
-    public function getUserDetails($id)
+    public function getUserDetails($id = null)
     {
-        $response = $this->client()->request('GET', $this->apiBaseUri . '/v1/users/' . $id, $this->opts());
+        if ($id) {
+            $endpoint = '/v1/users/' . $id;
+        } else {
+            $endpoint = '/v1/my-details';
+        }
+        
+        $response = $this->client()->request('GET', $this->apiBaseUri . $endpoint, $this->opts());
     
         if( $response->getStatusCode() != 200 ){
             return $this->log($response, false);

@@ -14,16 +14,16 @@ class ClientSpec extends ObjectBehavior
     
     function it_can_get_user_details_from_an_id()
     {
-        $this->beConstructedWith(config('API_KEY'));
+        $this->beConstructedWith(config('API_URI'), config('API_KEY'));
         $this->getUserDetails(config('USER_ID'))->shouldBeAnObjectContainingKeyAndValue('id', config('USER_ID'));
     }
-    
-    function it_can_get_user_course_details_from_an_id()
-    {
-        $this->beConstructedWith(config('API_KEY'));
-        $this->getUserCourses(config('USER_ID'))->shouldBeAnObjectContainingKeyAndValue('userid', config('USER_ID'));
-    }
 
+    function it_can_get_user_details_from_token()
+    {
+        $this->beConstructedWith(config('API_URI'), config('API_KEY'));
+        $this->getUserDetails()->shouldBeAnObjectContainingKeyAndValue('id', config('USER_ID'));
+    }
+    
     public function getMatchers()
     {
         return [

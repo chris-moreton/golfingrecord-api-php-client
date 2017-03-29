@@ -6,6 +6,11 @@ use GuzzleHttp\Client as GuzzleClient;
 trait HttpClient
 {
     /**
+     * The base URI for the API
+     */
+    private $apiBaseUri;
+    
+    /**
      * 
      * @var GuzzleClient
      */
@@ -44,9 +49,11 @@ trait HttpClient
      * @param string $apiKey  The API key
      */
     public function __construct(
+        $apiBaseUri = null,
         $apiKey = null
     )
     {
+        $this->apiBaseUri = $apiBaseUri;
         $this->apiKey = $apiKey;
     }
 
