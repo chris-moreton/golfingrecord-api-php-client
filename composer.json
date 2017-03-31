@@ -1,6 +1,6 @@
 {
-    "name": "netsensia/golfingrecord-api-php-client",
-    "description": "API Wrapper for the Companies House API",
+    "name": "chris-moreton/golfingrecord-api-php-client",
+    "description": "API Wrapper for the Golfing Record API",
     "license": "MIT",
     "require": {
         "php": ">=5.4.0",
