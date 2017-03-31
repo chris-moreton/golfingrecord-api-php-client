@@ -14,14 +14,21 @@ class ClientSpec extends ObjectBehavior
     
     function it_can_get_user_details_from_an_id()
     {
-        $this->beConstructedWith(config('API_URI'), config('API_KEY'));
+        $this->beConstructedWith(config('API_URI'), config('API_USER_KEY'));
         $this->getUserDetails(config('USER_ID'))->shouldBeAnObjectContainingKeyAndValue('id', config('USER_ID'));
     }
 
     function it_can_get_user_details_from_token()
     {
-        $this->beConstructedWith(config('API_URI'), config('API_KEY'));
+        $this->beConstructedWith(config('API_URI'), config('API_USER_KEY'));
         $this->getUserDetails()->shouldBeAnObjectContainingKeyAndValue('id', config('USER_ID'));
+    }
+    
+    function it_can_create_a_user()
+    {
+        $this->beConstructedWith(config('API_URI'), config('API_ADMIN_KEY'));
+        $name = time();
+        $this->createUser(['realname' => $name, 'oauth_id' => md5($name), 'oauth_provider' => 'test'])->shouldBeAnObjectContainingKeyAndValue('realname', $name);
     }
     
     public function getMatchers()
@@ -32,4 +39,6 @@ class ClientSpec extends ObjectBehavior
             }
         ];
     }
+    
+    
 }

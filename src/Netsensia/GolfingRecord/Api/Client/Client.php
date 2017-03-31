@@ -39,6 +39,26 @@ class Client
     }
     
     /**
+     * Create user
+     *
+     * @return boolean|mixed
+     */
+    public function createUser(array $details)
+    {
+        $response = $this->client()->request('POST', $this->apiBaseUri . '/v1/users', $this->opts(['json' => $details]));
+    
+        if( $response->getStatusCode() != 201 ) {
+            return $this->log($response, false);
+        }
+    
+        $jsonDecode = json_decode($response->getBody());
+    
+        $this->log($response, true);
+    
+        return $jsonDecode;
+    }
+    
+    /**
      * User courses
      *
      * /user/{id}/courses/{courseId}
