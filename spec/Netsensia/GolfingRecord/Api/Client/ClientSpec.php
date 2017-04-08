@@ -12,16 +12,16 @@ class ClientSpec extends ObjectBehavior
         $this->shouldHaveType('Netsensia\GolfingRecord\Api\Client\Client');
     }
     
-    function it_can_get_user_details_from_an_id()
+    function it_can_get_user_details_from_an_id_using_a_user_token()
     {
         $this->beConstructedWith(config('API_URI'), config('API_USER_KEY'));
         $this->getUserDetails(config('USER_ID'))->shouldBeAnObjectContainingKeyAndValue('id', config('USER_ID'));
     }
 
-    function it_can_get_user_details_from_token()
+    function it_can_get_user_details_from_an_id_using_an_admin_token()
     {
-        $this->beConstructedWith(config('API_URI'), config('API_USER_KEY'));
-        $this->getUserDetails()->shouldBeAnObjectContainingKeyAndValue('id', config('USER_ID'));
+        $this->beConstructedWith(config('API_URI'), config('API_ADMIN_KEY'));
+        $this->getUserDetails(config('USER_ID'))->shouldBeAnObjectContainingKeyAndValue('id', config('USER_ID'));
     }
     
     function it_can_create_a_user()
