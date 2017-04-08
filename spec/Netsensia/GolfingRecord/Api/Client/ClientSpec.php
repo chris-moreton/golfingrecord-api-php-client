@@ -17,6 +17,12 @@ class ClientSpec extends ObjectBehavior
         $this->beConstructedWith(config('API_URI'), config('API_USER_KEY'));
         $this->getUserDetails(config('USER_ID'))->shouldBeAnObjectContainingKeyAndValue('id', config('USER_ID'));
     }
+    
+    function it_can_get_user_details_from_an_oauth_id_and_provider_using_an_admin_token()
+    {
+        $this->beConstructedWith(config('API_URI'), config('API_ADMIN_KEY'));
+        $this->getUserDetailsFromOAuthId(config('OAUTH_ID'), 'golfingrecord')->shouldBeAnObjectContainingKeyAndValue('id', config('USER_ID'));
+    }
 
     function it_can_get_user_details_from_an_id_using_an_admin_token()
     {

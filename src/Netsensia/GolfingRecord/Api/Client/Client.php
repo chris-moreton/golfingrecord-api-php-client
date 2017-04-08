@@ -34,6 +34,23 @@ class Client
         return $jsonDecode;
     }
     
+    public function getUserDetailsFromOAuthId($id, $provider)
+    {
+        $endpoint = '/v1/oauth/users/' . $id . '/' . $provider;
+    
+        $response = $this->client()->request('GET', $this->apiBaseUri . $endpoint, $this->opts());
+    
+        if( $response->getStatusCode() != 200 ){
+            return $this->log($response, false);
+        }
+    
+        $jsonDecode = json_decode($response->getBody());
+    
+        $this->log($response, true);
+    
+        return $jsonDecode;
+    }
+    
     /**
      * Create user
      *
