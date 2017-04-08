@@ -23,7 +23,7 @@ class ClientSpec extends ObjectBehavior
         $this->beConstructedWith(config('API_URI'), config('API_ADMIN_KEY'));
         $this->getUserDetails(config('USER_ID'))->shouldBeAnObjectContainingKeyAndValue('id', config('USER_ID'));
     }
-    
+
     function it_can_create_a_user()
     {
         $this->beConstructedWith(config('API_URI'), config('API_ADMIN_KEY'));

@@ -17,13 +17,9 @@ class Client
      * 
      * @return boolean|mixed
      */
-    public function getUserDetails($id = null)
+    public function getUserDetails($id)
     {
-        if ($id) {
-            $endpoint = '/v1/users/' . $id;
-        } else {
-            $endpoint = '/v1/my-details';
-        }
+        $endpoint = '/v1/users/' . $id;
         
         $response = $this->client()->request('GET', $this->apiBaseUri . $endpoint, $this->opts());
     
