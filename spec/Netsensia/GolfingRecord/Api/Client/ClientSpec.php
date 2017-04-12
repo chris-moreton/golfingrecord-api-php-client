@@ -17,10 +17,11 @@ class ClientSpec extends ObjectBehavior
         $this->beConstructedWith(config('API_URI'), config('API_ADMIN_KEY'));
         
         $name = time();
-        $userDetails = $this->createUser(['realname' => $name, 'oauth_id' => md5($name), 'oauth_provider' => 'test'])->getWrappedObject();
+        $user1Details = $this->createUser(['realname' => $name, 'oauth_id' => md5($name), 'oauth_provider' => 'test'])->getWrappedObject();
+        $user2Details = $this->createUser(['realname' => $name, 'oauth_id' => md5($name), 'oauth_provider' => 'test'])->getWrappedObject();
         
-        $this->createUserFriend($userDetails->id, ['friend_id' => config('USER_ID'), 'access_level' => 2])->shouldBeAnObjectContainingKeyAndValue('status', 'created');
-        $this->createUserFriend($userDetails->id, ['friend_id' => config('USER_ID'), 'access_level' => 1])->shouldBe(false);
+        $this->createUserFriend($user1Details->id, ['friend_id' => $user2Details->id, 'access_level' => 2])->shouldBeAnObjectContainingKeyAndValue('status', 'created');
+        $this->createUserFriend($user1Details->id, ['friend_id' => $user2Details->id, 'access_level' => 1])->shouldBe(false);
         
     }
     
