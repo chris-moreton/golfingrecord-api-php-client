@@ -66,7 +66,7 @@ trait HttpClient
     {
 
         if( !isset($this->guzzleClient) ){
-            $this->guzzleClient = new GuzzleClient();
+            $this->guzzleClient = new GuzzleClient(['http_errors' => false]);
         }
 
         return $this->guzzleClient;

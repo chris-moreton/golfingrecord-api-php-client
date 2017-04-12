@@ -72,19 +72,87 @@ class Client
     }
     
     /**
-     * User courses
-     *
-     * /user/{id}/courses/{courseId}
-     *
-     * @param $id The user id or email
+     * Create course
      *
      * @return boolean|mixed
      */
-    public function getUserCourses($id, $courseId = '')
+    public function createCourse($id, array $details)
     {
-        $response = $this->client()->request('GET', $this->apiBaseUri . '/v1/users/' . $id . '/courses/' . $courseId, $this->opts());
+        $response = $this->client()->request('POST', $this->apiBaseUri . '/v1/users/' . $id . '/courses', $this->opts(['json' => $details]));
+    
+        if( $response->getStatusCode() != 201 ) {
+            return $this->log($response, false);
+        }
+    
+        $jsonDecode = json_decode($response->getBody());
+    
+        $this->log($response, true);
+    
+        return $jsonDecode;
+    }
+    
+    /**
+     * User courses
+     *
+     * /user/{id}/courses
+     *
+     * @param $id The user id
+     *
+     * @return boolean|mixed
+     */
+    public function getUserCourses($id)
+    {
+        $response = $this->client()->request('GET', $this->apiBaseUri . '/v1/users/' . $id . '/courses', $this->opts());
     
         if( $response->getStatusCode() != 200 ){
+            return $this->log($response, false);
+        }
+    
+        $jsonDecode = json_decode($response->getBody());
+    
+        $this->log($response, true);
+    
+        return $jsonDecode;
+    }
+    
+    /**
+     * User friends
+     *
+     * /user/{id}/friends
+     *
+     * @param $id The user id
+     *
+     * @return boolean|mixed
+     */
+    public function getUserFriends($id)
+    {
+        $response = $this->client()->request('GET', $this->apiBaseUri . '/v1/users/' . $id . '/friends', $this->opts());
+    
+        if( $response->getStatusCode() != 200 ){
+            return $this->log($response, false);
+        }
+    
+        $jsonDecode = json_decode($response->getBody());
+    
+        $this->log($response, true);
+    
+        return $jsonDecode;
+    }
+    
+    /**
+     * Create user friend
+     *
+     * /user/{id}/friends
+     *
+     * @param $id The user id
+     *
+     * @return boolean|mixed
+     */
+    public function createUserFriend($id, array $details)
+    {
+        $response = $this->client()->request('POST', $this->apiBaseUri . '/v1/users/' . $id . '/friends', $this->opts(['json' => $details]));
+    
+        if( $response->getStatusCode() != 201 ) {
             return $this->log($response, false);
         }
     
