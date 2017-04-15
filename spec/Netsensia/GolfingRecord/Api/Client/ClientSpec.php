@@ -59,10 +59,10 @@ class ClientSpec extends ObjectBehavior
         $courseCount = count($this->getUserCourses(config('USER_ID'))->getWrappedObject()->data);
     
         $this->createCourse(config('USER_ID'), ['course_name' => $name, 'number_of_holes' => 18])->shouldBeAnObjectContainingKeyAndValue('course_name', $name);
-        $this->getUserCourses(config('USER_ID'))->shouldBeAResultSetWithItemCount($courseCount + 1);
+        $this->getUserCourses(config('USER_ID'))->shouldBeAResultSetWithItemCount($courseCount + 1 < 10 ? $courseCount + 1 : 10);
         $this->createCourse(config('USER_ID'), ['course_name' => ++$name, 'number_of_holes' => 18])->shouldBeAnObjectContainingKeyAndValue('course_name', $name);
         $this->createCourse(config('USER_ID'), ['course_name' => ++$name, 'number_of_holes' => 18])->shouldBeAnObjectContainingKeyAndValue('course_name', $name);
-        $this->getUserCourses(config('USER_ID'))->shouldBeAResultSetWithItemCount($courseCount + 3);
+        $this->getUserCourses(config('USER_ID'))->shouldBeAResultSetWithItemCount($courseCount + 3 < 10 ? $courseCount + 3 : 10);
     }
     
     function it_can_create_and_retrieve_user_friends()
@@ -74,10 +74,10 @@ class ClientSpec extends ObjectBehavior
         $courseCount = count($this->getUserCourses(config('USER_ID'))->getWrappedObject()->data);
     
         $this->createCourse(config('USER_ID'), ['course_name' => $name, 'number_of_holes' => 18])->shouldBeAnObjectContainingKeyAndValue('course_name', $name);
-        $this->getUserCourses(config('USER_ID'))->shouldBeAResultSetWithItemCount($courseCount + 1);
+        $this->getUserCourses(config('USER_ID'))->shouldBeAResultSetWithItemCount($courseCount + 1 < 10 ? $courseCount + 1 : 10);
         $this->createCourse(config('USER_ID'), ['course_name' => ++$name, 'number_of_holes' => 18])->shouldBeAnObjectContainingKeyAndValue('course_name', $name);
         $this->createCourse(config('USER_ID'), ['course_name' => ++$name, 'number_of_holes' => 18])->shouldBeAnObjectContainingKeyAndValue('course_name', $name);
-        $this->getUserCourses(config('USER_ID'))->shouldBeAResultSetWithItemCount($courseCount + 3);
+        $this->getUserCourses(config('USER_ID'))->shouldBeAResultSetWithItemCount($courseCount + 3 < 10 ? $courseCount + 3 : 10);
     
     }
     
