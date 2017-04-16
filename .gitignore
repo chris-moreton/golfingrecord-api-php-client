@@ -5,6 +5,7 @@ vendor/
 .test.config
 bin/
 .env
+.idea/
 
 
 
