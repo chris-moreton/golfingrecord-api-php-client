@@ -162,4 +162,19 @@ class Client
     
         return $jsonDecode;
     }
+
+    public function getDiagnostics()
+    {
+        $response = $this->client()->request('GET', $this->apiBaseUri . '/v1/diagnostics', $this->opts());
+
+        if( $response->getStatusCode() != 200 ) {
+            return $this->log($response, false);
+        }
+
+        $jsonDecode = json_decode($response->getBody());
+
+        $this->log($response, true);
+
+        return $jsonDecode;
+    }
 }

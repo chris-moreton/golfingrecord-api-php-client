@@ -11,7 +11,14 @@ class ClientSpec extends ObjectBehavior
     {
         $this->shouldHaveType('Netsensia\GolfingRecord\Api\Client\Client');
     }
-    
+
+    function it_will_return_diagnostics_and_they_will_be_good()
+    {
+        $this->beConstructedWith(config('API_URI'), config('API_ADMIN_KEY'));
+
+        $this->getDiagnostics()->shouldBeAnObjectContainingKeyAndValue('ok', true);
+    }
+
     function it_can_create_a_user_friend_relationship()
     {
         $this->beConstructedWith(config('API_URI'), config('API_ADMIN_KEY'));
