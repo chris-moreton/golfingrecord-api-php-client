@@ -12,6 +12,41 @@ class ClientSpec extends ObjectBehavior
         $this->shouldHaveType('Netsensia\GolfingRecord\Api\Client\Client');
     }
 
+    function it_can_create_and_retrieve_user_courses()
+    {
+        $pagination = PHP_INT_MAX;
+
+        $this->beConstructedWith(config('API_URI'), config('API_USER_KEY'));
+
+        $name = time();
+
+        $courseCount = count($this->getUserCourses(config('USER_ID'))->getWrappedObject()->data);
+
+        $this->createCourse(config('USER_ID'), ['course_name' => $name, 'course_city' => 'London'])->shouldBeAnObjectContainingKeyAndValue('course_name', $name);
+        $this->getUserCourses(config('USER_ID'))->shouldBeAResultSetWithItemCount($courseCount + 1 < $pagination ? $courseCount + 1 : $pagination);
+        $this->createCourse(config('USER_ID'), ['course_name' => ++$name, 'course_city' => 'London'])->shouldBeAnObjectContainingKeyAndValue('course_name', $name);
+        $this->createCourse(config('USER_ID'), ['course_name' => ++$name, 'course_city' => 'London'])->shouldBeAnObjectContainingKeyAndValue('course_name', $name);
+        $this->getUserCourses(config('USER_ID'))->shouldBeAResultSetWithItemCount($courseCount + 3 < $pagination ? $courseCount + 3 : $pagination);
+    }
+
+    function it_can_create_and_retrieve_user_friends()
+    {
+        $pagination = PHP_INT_MAX;
+
+        $this->beConstructedWith(config('API_URI'), config('API_USER_KEY'));
+
+        $name = time();
+
+        $courseCount = count($this->getUserCourses(config('USER_ID'))->getWrappedObject()->data);
+
+        $this->createCourse(config('USER_ID'), ['course_name' => $name, 'course_city' => 'London'])->shouldBeAnObjectContainingKeyAndValue('course_name', $name);
+        $this->getUserCourses(config('USER_ID'))->shouldBeAResultSetWithItemCount($courseCount + 1 < $pagination ? $courseCount + 1 : $pagination);
+        $this->createCourse(config('USER_ID'), ['course_name' => ++$name, 'course_city' => 'London'])->shouldBeAnObjectContainingKeyAndValue('course_name', $name);
+        $this->createCourse(config('USER_ID'), ['course_name' => ++$name, 'course_city' => 'London'])->shouldBeAnObjectContainingKeyAndValue('course_name', $name);
+        $this->getUserCourses(config('USER_ID'))->shouldBeAResultSetWithItemCount($courseCount + 3 < $pagination ? $courseCount + 3 : $pagination);
+
+    }
+
     function it_will_return_diagnostics_and_they_will_be_good()
     {
         $this->beConstructedWith(config('API_URI'), config('API_ADMIN_KEY'));
@@ -55,41 +90,6 @@ class ClientSpec extends ObjectBehavior
         $this->beConstructedWith(config('API_URI'), config('API_ADMIN_KEY'));
         $name = time();
         $this->createUser(['realname' => $name, 'oauth_id' => md5($name), 'oauth_provider' => 'test'])->shouldBeAnObjectContainingKeyAndValue('realname', $name);
-    }
-    
-    function it_can_create_and_retrieve_user_courses()
-    {
-        $pagination = PHP_INT_MAX;
-
-        $this->beConstructedWith(config('API_URI'), config('API_USER_KEY'));
-    
-        $name = time();
-    
-        $courseCount = count($this->getUserCourses(config('USER_ID'))->getWrappedObject()->data);
-    
-        $this->createCourse(config('USER_ID'), ['course_name' => $name, 'number_of_holes' => 18])->shouldBeAnObjectContainingKeyAndValue('course_name', $name);
-        $this->getUserCourses(config('USER_ID'))->shouldBeAResultSetWithItemCount($courseCount + 1 < $pagination ? $courseCount + 1 : $pagination);
-        $this->createCourse(config('USER_ID'), ['course_name' => ++$name, 'number_of_holes' => 18])->shouldBeAnObjectContainingKeyAndValue('course_name', $name);
-        $this->createCourse(config('USER_ID'), ['course_name' => ++$name, 'number_of_holes' => 18])->shouldBeAnObjectContainingKeyAndValue('course_name', $name);
-        $this->getUserCourses(config('USER_ID'))->shouldBeAResultSetWithItemCount($courseCount + 3 < $pagination ? $courseCount + 3 : $pagination);
-    }
-    
-    function it_can_create_and_retrieve_user_friends()
-    {
-        $pagination = PHP_INT_MAX;
-
-        $this->beConstructedWith(config('API_URI'), config('API_USER_KEY'));
-    
-        $name = time();
-    
-        $courseCount = count($this->getUserCourses(config('USER_ID'))->getWrappedObject()->data);
-    
-        $this->createCourse(config('USER_ID'), ['course_name' => $name, 'number_of_holes' => 18])->shouldBeAnObjectContainingKeyAndValue('course_name', $name);
-        $this->getUserCourses(config('USER_ID'))->shouldBeAResultSetWithItemCount($courseCount + 1 < $pagination ? $courseCount + 1 : $pagination);
-        $this->createCourse(config('USER_ID'), ['course_name' => ++$name, 'number_of_holes' => 18])->shouldBeAnObjectContainingKeyAndValue('course_name', $name);
-        $this->createCourse(config('USER_ID'), ['course_name' => ++$name, 'number_of_holes' => 18])->shouldBeAnObjectContainingKeyAndValue('course_name', $name);
-        $this->getUserCourses(config('USER_ID'))->shouldBeAResultSetWithItemCount($courseCount + 3 < $pagination ? $courseCount + 3 : $pagination);
-    
     }
     
     public function getMatchers()

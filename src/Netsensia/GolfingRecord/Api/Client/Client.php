@@ -79,7 +79,7 @@ class Client
     public function createCourse($id, array $details)
     {
         $response = $this->client()->request('POST', $this->apiBaseUri . '/v1/users/' . $id . '/courses', $this->opts(['json' => $details]));
-    
+
         if( $response->getStatusCode() != 201 ) {
             return $this->log($response, false);
         }
@@ -103,7 +103,7 @@ class Client
     public function getUserCourses($id)
     {
         $response = $this->client()->request('GET', $this->apiBaseUri . '/v1/users/' . $id . '/courses', $this->opts());
-    
+
         if( $response->getStatusCode() != 200 ){
             return $this->log($response, false);
         }
