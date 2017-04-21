@@ -12,6 +12,12 @@ class ClientSpec extends ObjectBehavior
         $this->shouldHaveType('Netsensia\GolfingRecord\Api\Client\Client');
     }
 
+    function it_can_get_the_list_of_tees()
+    {
+        $this->beConstructedWith(config('API_URI'), config('API_ADMIN_KEY'));
+        $this->getTees()->shouldBeAnArrayWithItemCount(9);
+    }
+
     function it_can_create_and_retrieve_user_courses()
     {
         $pagination = PHP_INT_MAX;
@@ -91,7 +97,7 @@ class ClientSpec extends ObjectBehavior
         $name = time();
         $this->createUser(['realname' => $name, 'oauth_id' => md5($name), 'oauth_provider' => 'test'])->shouldBeAnObjectContainingKeyAndValue('realname', $name);
     }
-    
+
     public function getMatchers()
     {
         return [
@@ -100,6 +106,9 @@ class ClientSpec extends ObjectBehavior
             },
             'beAResultSetWithItemCount' => function ($subject, $count) {
                 return !empty($subject) && property_exists($subject, 'data') && count($subject->data) == $count;
+            },
+            'beAnArrayWithItemCount' => function ($subject, $count) {
+                return !empty($subject) && is_array($subject) && count($subject) == $count;
             }
         ];
     }
