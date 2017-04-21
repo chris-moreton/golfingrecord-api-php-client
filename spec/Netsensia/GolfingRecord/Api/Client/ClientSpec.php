@@ -22,10 +22,10 @@ class ClientSpec extends ObjectBehavior
 
         $courseCount = count($this->getUserCourses(config('USER_ID'))->getWrappedObject()->data);
 
-        $this->createCourse(config('USER_ID'), ['course_name' => $name, 'course_city' => 'London'])->shouldBeAnObjectContainingKeyAndValue('course_name', $name);
+        $this->createCourse(config('USER_ID'), getCourseData($name))->shouldBeAnObjectContainingKeyAndValue('course_name', $name);
         $this->getUserCourses(config('USER_ID'))->shouldBeAResultSetWithItemCount($courseCount + 1 < $pagination ? $courseCount + 1 : $pagination);
-        $this->createCourse(config('USER_ID'), ['course_name' => ++$name, 'course_city' => 'London'])->shouldBeAnObjectContainingKeyAndValue('course_name', $name);
-        $this->createCourse(config('USER_ID'), ['course_name' => ++$name, 'course_city' => 'London'])->shouldBeAnObjectContainingKeyAndValue('course_name', $name);
+        $this->createCourse(config('USER_ID'), getCourseData(++$name))->shouldBeAnObjectContainingKeyAndValue('course_name', $name);
+        $this->createCourse(config('USER_ID'), getCourseData(++$name))->shouldBeAnObjectContainingKeyAndValue('course_name', $name);
         $this->getUserCourses(config('USER_ID'))->shouldBeAResultSetWithItemCount($courseCount + 3 < $pagination ? $courseCount + 3 : $pagination);
     }
 
@@ -39,10 +39,10 @@ class ClientSpec extends ObjectBehavior
 
         $courseCount = count($this->getUserCourses(config('USER_ID'))->getWrappedObject()->data);
 
-        $this->createCourse(config('USER_ID'), ['course_name' => $name, 'course_city' => 'London'])->shouldBeAnObjectContainingKeyAndValue('course_name', $name);
+        $this->createCourse(config('USER_ID'), getCourseData($name))->shouldBeAnObjectContainingKeyAndValue('course_name', $name);
         $this->getUserCourses(config('USER_ID'))->shouldBeAResultSetWithItemCount($courseCount + 1 < $pagination ? $courseCount + 1 : $pagination);
-        $this->createCourse(config('USER_ID'), ['course_name' => ++$name, 'course_city' => 'London'])->shouldBeAnObjectContainingKeyAndValue('course_name', $name);
-        $this->createCourse(config('USER_ID'), ['course_name' => ++$name, 'course_city' => 'London'])->shouldBeAnObjectContainingKeyAndValue('course_name', $name);
+        $this->createCourse(config('USER_ID'), getCourseData(++$name))->shouldBeAnObjectContainingKeyAndValue('course_name', $name);
+        $this->createCourse(config('USER_ID'), getCourseData(++$name))->shouldBeAnObjectContainingKeyAndValue('course_name', $name);
         $this->getUserCourses(config('USER_ID'))->shouldBeAResultSetWithItemCount($courseCount + 3 < $pagination ? $courseCount + 3 : $pagination);
 
     }
