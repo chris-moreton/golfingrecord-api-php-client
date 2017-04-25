@@ -19,7 +19,7 @@ function config($key) {
 }
 
 function getCourseData($name) {
-    $data = ['course_name' => $name, 'course_city' => 'London'];
+    $data = ['name' => $name, 'city' => 'London'];
 
     for ($i=1; $i<=18; $i++) {
         $data['holes'][] = [
