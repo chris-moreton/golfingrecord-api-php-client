@@ -151,6 +151,21 @@ trait HttpClient
     {
         $this->lastContent = $lastContent;
     }
+    
+    public function simpleGet($endpoint)
+    {
+        $response = $this->client()->request('GET', $this->apiBaseUri . $endpoint, $this->opts());
+        
+        if( $response->getStatusCode() != 200 ){
+            return $this->log($response, false);
+        }
+        
+        $jsonDecode = json_decode($response->getBody());
+        
+        $this->log($response, true);
+        
+        return $jsonDecode;
+    }
 
     /**
      * Log the response of the API call and set some internal member vars

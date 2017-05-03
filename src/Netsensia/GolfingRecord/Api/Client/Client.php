@@ -19,76 +19,12 @@ class Client
      */
     public function getUserDetails($id)
     {
-        $endpoint = '/v1/users/' . $id;
-        
-        $response = $this->client()->request('GET', $this->apiBaseUri . $endpoint, $this->opts());
-    
-        if( $response->getStatusCode() != 200 ){
-            return $this->log($response, false);
-        }
-    
-        $jsonDecode = json_decode($response->getBody());
-    
-        $this->log($response, true);
-    
-        return $jsonDecode;
+        return $this->simpleGet('/v1/users/' . $id);
     }
     
     public function getUserDetailsFromOAuthId($id, $provider)
     {
-        $endpoint = '/v1/oauth/users/' . $id . '/' . $provider;
-    
-        $response = $this->client()->request('GET', $this->apiBaseUri . $endpoint, $this->opts());
-    
-        if( $response->getStatusCode() != 200 ){
-            return $this->log($response, false);
-        }
-    
-        $jsonDecode = json_decode($response->getBody());
-    
-        $this->log($response, true);
-    
-        return $jsonDecode;
-    }
-    
-    /**
-     * Create user
-     *
-     * @return boolean|mixed
-     */
-    public function createUser(array $details)
-    {
-        $response = $this->client()->request('POST', $this->apiBaseUri . '/v1/users', $this->opts(['json' => $details]));
-    
-        if( $response->getStatusCode() != 201 ) {
-            return $this->log($response, false);
-        }
-    
-        $jsonDecode = json_decode($response->getBody());
-    
-        $this->log($response, true);
-    
-        return $jsonDecode;
-    }
-    
-    /**
-     * Create course
-     *
-     * @return boolean|mixed
-     */
-    public function createCourse($id, array $details)
-    {
-        $response = $this->client()->request('POST', $this->apiBaseUri . '/v1/users/' . $id . '/courses', $this->opts(['json' => $details]));
-
-        if( $response->getStatusCode() != 201 ) {
-            return $this->log($response, false);
-        }
-    
-        $jsonDecode = json_decode($response->getBody());
-    
-        $this->log($response, true);
-    
-        return $jsonDecode;
+        return $this->simpleGet('/v1/oauth/users/' . $id . '/' . $provider);
     }
     
     /**
@@ -102,17 +38,7 @@ class Client
      */
     public function getUserCourses($id)
     {
-        $response = $this->client()->request('GET', $this->apiBaseUri . '/v1/users/' . $id . '/courses', $this->opts());
-
-        if( $response->getStatusCode() != 200 ){
-            return $this->log($response, false);
-        }
-    
-        $jsonDecode = json_decode($response->getBody());
-    
-        $this->log($response, true);
-    
-        return $jsonDecode;
+        return $this->simpleGet('/v1/users/' . $id . '/courses');
     }
     
     /**
@@ -126,17 +52,31 @@ class Client
      */
     public function getUserFriends($id)
     {
-        $response = $this->client()->request('GET', $this->apiBaseUri . '/v1/users/' . $id . '/friends', $this->opts());
+        return $this->simpleGet('/v1/users/' . $id . '/friends');
+    }
     
-        if( $response->getStatusCode() != 200 ){
-            return $this->log($response, false);
-        }
+    /**
+     * User courses
+     *
+     * /user/{id}/courses
+     *
+     * @param $id The user id
+     *
+     * @return boolean|mixed
+     */
+    public function getUserFriendCourses($id)
+    {
+        return $this->simpleGet('/v1/users/' . $id . '/friends/courses');
+    }
     
-        $jsonDecode = json_decode($response->getBody());
+    public function getDiagnostics()
+    {
+        return $this->simpleGet('/v1/diagnostics');
+    }
     
-        $this->log($response, true);
-    
-        return $jsonDecode;
+    public function getTees()
+    {
+        return $this->simpleGet('/v1/tees');
     }
     
     /**
@@ -163,33 +103,43 @@ class Client
         return $jsonDecode;
     }
 
-    public function getDiagnostics()
+    /**
+     * Create user
+     *
+     * @return boolean|mixed
+     */
+    public function createUser(array $details)
     {
-        $response = $this->client()->request('GET', $this->apiBaseUri . '/v1/diagnostics', $this->opts());
-
-        if( $response->getStatusCode() != 200 ) {
+        $response = $this->client()->request('POST', $this->apiBaseUri . '/v1/users', $this->opts(['json' => $details]));
+        
+        if( $response->getStatusCode() != 201 ) {
             return $this->log($response, false);
         }
-
+        
         $jsonDecode = json_decode($response->getBody());
-
+        
         $this->log($response, true);
-
+        
         return $jsonDecode;
     }
-
-    public function getTees()
+    
+    /**
+     * Create course
+     *
+     * @return boolean|mixed
+     */
+    public function createCourse($id, array $details)
     {
-        $response = $this->client()->request('GET', $this->apiBaseUri . '/v1/tees', $this->opts());
-
-        if( $response->getStatusCode() != 200 ) {
+        $response = $this->client()->request('POST', $this->apiBaseUri . '/v1/users/' . $id . '/courses', $this->opts(['json' => $details]));
+        
+        if( $response->getStatusCode() != 201 ) {
             return $this->log($response, false);
         }
-
+        
         $jsonDecode = json_decode($response->getBody());
-
+        
         $this->log($response, true);
-
+        
         return $jsonDecode;
     }
 }
