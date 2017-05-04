@@ -90,17 +90,7 @@ class Client
      */
     public function createUserFriend($id, array $details)
     {
-        $response = $this->client()->request('POST', $this->apiBaseUri . '/v1/users/' . $id . '/friends', $this->opts(['json' => $details]));
-    
-        if( $response->getStatusCode() != 201 ) {
-            return $this->log($response, false);
-        }
-    
-        $jsonDecode = json_decode($response->getBody());
-    
-        $this->log($response, true);
-    
-        return $jsonDecode;
+        return $this->simpleCreate('/v1/users/' . $id . '/friends', $details);
     }
 
     /**
@@ -110,17 +100,7 @@ class Client
      */
     public function createUser(array $details)
     {
-        $response = $this->client()->request('POST', $this->apiBaseUri . '/v1/users', $this->opts(['json' => $details]));
-        
-        if( $response->getStatusCode() != 201 ) {
-            return $this->log($response, false);
-        }
-        
-        $jsonDecode = json_decode($response->getBody());
-        
-        $this->log($response, true);
-        
-        return $jsonDecode;
+        return $this->simpleCreate('/v1/users', $details);
     }
     
     /**
@@ -130,16 +110,6 @@ class Client
      */
     public function createCourse($id, array $details)
     {
-        $response = $this->client()->request('POST', $this->apiBaseUri . '/v1/users/' . $id . '/courses', $this->opts(['json' => $details]));
-        
-        if( $response->getStatusCode() != 201 ) {
-            return $this->log($response, false);
-        }
-        
-        $jsonDecode = json_decode($response->getBody());
-        
-        $this->log($response, true);
-        
-        return $jsonDecode;
+        return $this->simpleCreate('/v1/users/' . $id . '/courses', $details);
     }
 }

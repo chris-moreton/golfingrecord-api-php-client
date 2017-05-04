@@ -167,6 +167,21 @@ trait HttpClient
         return $jsonDecode;
     }
 
+    public function simpleCreate($endpoint, $details)
+    {
+        $response = $this->client()->request('POST', $this->apiBaseUri . $endpoint, $this->opts(['json' => $details]));
+        
+        if( $response->getStatusCode() != 201 ){
+            return $this->log($response, false);
+        }
+        
+        $jsonDecode = json_decode($response->getBody());
+        
+        $this->log($response, true);
+        
+        return $jsonDecode;
+    }
+    
     /**
      * Log the response of the API call and set some internal member vars
      * If content body is JSON, convert it to an array

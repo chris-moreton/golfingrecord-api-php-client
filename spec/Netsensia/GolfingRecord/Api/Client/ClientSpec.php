@@ -27,7 +27,7 @@ class ClientSpec extends ObjectBehavior
         $name = time();
         
         $courseCount = count($this->getUserCourses(config('USER_ID'))->getWrappedObject()->data);
-
+        
         $this->createCourse(config('USER_ID'), getCourseData($name))->shouldBeAnObjectContainingKeyAndValue('name', $name);
         $this->getUserCourses(config('USER_ID'))->shouldBeAResultSetWithItemCount($courseCount + 1 < $pagination ? $courseCount + 1 : $pagination);
         $this->createCourse(config('USER_ID'), getCourseData(++$name))->shouldBeAnObjectContainingKeyAndValue('name', $name);
