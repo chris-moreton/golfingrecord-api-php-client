@@ -80,6 +80,7 @@ trait HttpClient
                 ['headers' => [
                         'Authorization' => 'Bearer ' . $this->apiKey,
                         'Content-Type' => 'application/json',
+                        'Accept' => 'application/json',
                     ]
                 ]
             );
@@ -156,22 +157,19 @@ trait HttpClient
     {
         $response = $this->client()->request('GET', $this->apiBaseUri . $endpoint, $this->opts());
         
-        if( $response->getStatusCode() != 200 ){
-            return $this->log($response, false);
-        }
-        
-        $jsonDecode = json_decode($response->getBody());
-        
-        $this->log($response, true);
-        
-        return $jsonDecode;
+        return $this->checkResponse($response, 200);
     }
 
     public function simpleCreate($endpoint, $details)
     {
         $response = $this->client()->request('POST', $this->apiBaseUri . $endpoint, $this->opts(['json' => $details]));
         
-        if( $response->getStatusCode() != 201 ){
+        return $this->checkResponse($response, 201);
+    }
+    
+    private function checkResponse($response, $expectedCode)
+    {
+        if ($response->getStatusCode() != $expectedCode) {
             return $this->log($response, false);
         }
         
@@ -202,7 +200,7 @@ trait HttpClient
         if (json_last_error() == JSON_ERROR_NONE) {
             $this->lastContent = $jsonDecoded;
         } else {
-            $this->lastContent = $responseBody;
+            $this->lastContent = ['error' => 'An unknown error has occurred'];
         }
     
         // @todo - Log properly
