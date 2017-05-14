@@ -15,6 +15,7 @@ class ClientSpec extends ObjectBehavior
     function it_can_get_the_list_of_tees()
     {
         $this->beConstructedWith(config('API_URI'), config('API_ADMIN_KEY'));
+        
         $this->getTees()->shouldBeAnArrayWithItemCount(9);
     }
 
@@ -33,6 +34,21 @@ class ClientSpec extends ObjectBehavior
         $this->createCourse(config('USER_ID'), getCourseData(++$name))->shouldBeAnObjectContainingKeyAndValue('name', $name);
         $this->createCourse(config('USER_ID'), getCourseData(++$name))->shouldBeAnObjectContainingKeyAndValue('name', $name);
         $this->getUserCourses(config('USER_ID'))->shouldBeAResultSetWithItemCount($courseCount + 3 < $pagination ? $courseCount + 3 : $pagination);
+    }
+    
+    function it_can_search_for_courses()
+    {
+        $this->beConstructedWith(config('API_URI'), config('API_USER_KEY'));
+        
+        $name = uniqid('course_search', true);
+
+        $this->courseSearch($name)->shouldBeAnArrayWithItemCount(0);
+        $this->createCourse(config('USER_ID'), getCourseData($name))->shouldBeAnObjectContainingKeyAndValue('name', $name);
+        
+        // give a chance for the course to be indexed by Elasticsearch
+        sleep(2);
+        $this->courseSearch($name)->shouldBeAnArrayWithItemCount(1);
+        
     }
     
     function it_can_create_a_user_friend_relationship()
@@ -128,6 +144,9 @@ class ClientSpec extends ObjectBehavior
                 return !empty($subject) && property_exists($subject, 'data') && count($subject->data) == $count;
             },
             'beAnArrayWithItemCount' => function ($subject, $count) {
+                if (empty($subject) && $count == 0) {
+                    return true;
+                }
                 return !empty($subject) && is_array($subject) && count($subject) == $count;
             },
             'beAnArrayWithValues' => function ($subject, $key, $values) {

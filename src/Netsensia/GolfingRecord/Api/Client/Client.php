@@ -41,6 +41,11 @@ class Client
     {
         return $this->simpleGet('/v1/tees');
     }
+    
+    public function courseSearch($q)
+    {
+        return $this->simpleGet('/v1/search/courses?q=' . $q);
+    }
 
     public function createUserFriend($id, array $details)
     {
