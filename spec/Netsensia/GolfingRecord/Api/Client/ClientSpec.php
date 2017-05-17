@@ -36,6 +36,16 @@ class ClientSpec extends ObjectBehavior
         $this->getUserCourses(config('USER_ID'))->shouldBeAResultSetWithItemCount($courseCount + 3 < $pagination ? $courseCount + 3 : $pagination);
     }
     
+    function it_can_get_course_details_for_a_single_course()
+    {    
+        $this->beConstructedWith(config('API_URI'), config('API_USER_KEY'));
+    
+        $name = time();
+        
+        $course = $this->createCourse(config('USER_ID'), getCourseData($name))->getWrappedObject();
+        $this->getCourse($course->id)->shouldBeAnObjectContainingKeyAndValue('name', $name);
+    }
+    
     function it_can_search_for_courses()
     {
         $this->beConstructedWith(config('API_URI'), config('API_USER_KEY'));

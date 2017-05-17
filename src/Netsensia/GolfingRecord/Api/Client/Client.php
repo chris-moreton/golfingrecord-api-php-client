@@ -22,6 +22,11 @@ class Client
         return $this->simpleGet('/v1/users/' . $id . '/courses');
     }
     
+    public function getCourse($id)
+    {
+        return $this->simpleGet('/v1/courses/' . $id);
+    }
+    
     public function getUserFriends($id)
     {
         return $this->simpleGet('/v1/users/' . $id . '/friends');
