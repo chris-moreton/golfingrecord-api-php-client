@@ -46,6 +46,37 @@ class ClientSpec extends ObjectBehavior
         $this->getCourse($course->id)->shouldBeAnObjectContainingKeyAndValue('name', $name);
     }
     
+    function it_can_delete_a_course()
+    {
+        $this->beConstructedWith(config('API_URI'), config('API_USER_KEY'));
+    
+        $name = time();
+    
+        $course = $this->createCourse(config('USER_ID'), getCourseData($name))->getWrappedObject();
+        $this->getCourse($course->id)->shouldBeAnObjectContainingKeyAndValue('name', $name);
+        
+        $this->deleteCourse(config('USER_ID'), $course->id);
+        
+        $this->getCourse($course->id);
+        $this->getLastStatusCode()->shouldBe(404);
+    }
+    
+    function it_can_update_course_details()
+    {
+        $this->beConstructedWith(config('API_URI'), config('API_USER_KEY'));
+    
+        $name = time();
+    
+        $course = $this->createCourse(config('USER_ID'), getCourseData($name))->getWrappedObject();
+        $this->getCourse($course->id)->shouldBeAnObjectContainingKeyAndValue('name', $name);
+        
+        $updatedName = $name . '_updated';
+        $course->name = $updatedName;
+        $this->updateCourse(config('USER_ID'), $course->id, getCourseData($updatedName));
+        
+        $this->getCourse($course->id)->shouldBeAnObjectContainingKeyAndValue('name', $updatedName);
+    }
+    
     function it_can_search_for_courses()
     {
         $this->beConstructedWith(config('API_URI'), config('API_USER_KEY'));

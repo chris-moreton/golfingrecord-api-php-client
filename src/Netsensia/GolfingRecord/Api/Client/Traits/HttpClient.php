@@ -2,6 +2,7 @@
 namespace Netsensia\GolfingRecord\Api\Client\Traits;
 
 use GuzzleHttp\Client as GuzzleClient;
+use GuzzleHttp\Psr7\Response;
 
 trait HttpClient
 {
@@ -165,6 +166,20 @@ trait HttpClient
         $response = $this->client()->request('POST', $this->apiBaseUri . $endpoint, $this->opts(['json' => $details]));
         
         return $this->checkResponse($response, 201);
+    }
+    
+    public function simpleUpdate($endpoint, $details)
+    {
+        $response = $this->client()->request('PUT', $this->apiBaseUri . $endpoint, $this->opts(['json' => $details]));
+    
+        return $this->checkResponse($response, 202);
+    }
+    
+    public function simpleDelete($endpoint)
+    {
+        $response = $this->client()->request('DELETE', $this->apiBaseUri . $endpoint, $this->opts());
+    
+        return $this->checkResponse($response, 202);
     }
     
     private function checkResponse($response, $expectedCode)

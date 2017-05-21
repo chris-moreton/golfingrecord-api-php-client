@@ -64,7 +64,16 @@ class Client
 
     public function createCourse($id, array $details)
     {
-        $ret = $this->simpleCreate('/v1/users/' . $id . '/courses', $details);
-        return $ret;
+        return $this->simpleCreate('/v1/users/' . $id . '/courses', $details);
+    }
+    
+    public function updateCourse($userId, $courseId, array $details)
+    {
+        return $this->simpleUpdate('/v1/users/' . $userId . '/courses/' . $courseId, $details);
+    }
+    
+    public function deleteCourse($userId, $courseId)
+    {
+        return $this->simpleDelete('/v1/users/' . $userId . '/courses/' . $courseId);
     }
 }
