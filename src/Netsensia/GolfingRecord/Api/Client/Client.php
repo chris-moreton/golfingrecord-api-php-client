@@ -47,6 +47,46 @@ class Client
         return $this->simpleGet('/v1/tees');
     }
     
+    public function getStats($id)
+    {
+        return $this->simpleGet('/v1/users/' . $id . '/stats');
+    }
+    
+    public function getHandicap($id)
+    {
+        return $this->simpleGet('/v1/users/' . $id . '/handicap');
+    }
+    
+    public function getPayments($id)
+    {
+        return $this->simpleGet('/v1/users/' . $id . '/payments');
+    }
+    
+    public function createRound($id, $courseId, array $details)
+    {
+        return $this->simpleCreate('/v1/users/' . $id . '/courses/' . $courseId . '/rounds', $details);
+    }
+    
+    public function getRounds($id, $courseId)
+    {
+        return $this->simpleGet('/v1/users/' . $id . '/courses/' . $courseId . '/rounds');
+    }
+    
+    public function updateRound($userId, $courseId, $roundId, array $details)
+    {
+        return $this->simpleUpdate('/v1/users/' . $userId . '/courses/' . $courseId . '/rounds/' . $roundId, $details);
+    }
+    
+    public function deleteRound($userId, $courseId, $roundId)
+    {
+        return $this->simpleDelete('/v1/users/' . $userId . '/courses/' . $courseId . '/rounds/' . $roundId);
+    }
+
+    public function getFriends($id)
+    {
+        return $this->simpleGet('/v1/users/' . $id . '/friends');
+    }
+    
     public function courseSearch($q)
     {
         return $this->simpleGet('/v1/search/courses?q=' . $q);
