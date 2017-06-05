@@ -12,10 +12,56 @@ class ClientSpec extends ObjectBehavior
         $this->shouldHaveType('Netsensia\GolfingRecord\Api\Client\Client');
     }
 
-    function it_can_get_the_list_of_tees()
+    function it_can_get_a_list_of_friend_courses()
     {
         $this->beConstructedWith(config('API_URI'), config('API_ADMIN_KEY'));
         
+        $name = time();
+        $user1Details = $this->createUser(['realname' => $name, 'oauth_id' => md5($name), 'oauth_provider' => 'test'])->getWrappedObject();
+        $user2Details = $this->createUser(['realname' => $name, 'oauth_id' => md5($name), 'oauth_provider' => 'test'])->getWrappedObject();
+        $user3Details = $this->createUser(['realname' => $name, 'oauth_id' => md5($name), 'oauth_provider' => 'test'])->getWrappedObject();
+        $user4Details = $this->createUser(['realname' => $name, 'oauth_id' => md5($name), 'oauth_provider' => 'test'])->getWrappedObject();
+        
+        $this->createUserFriend($user2Details->id, ['friend_id' => $user1Details->id, 'access_level' => 1])->shouldBeAnObjectContainingKeyAndValue('status', 'created');
+        $this->createUserFriend($user3Details->id, ['friend_id' => $user1Details->id, 'access_level' => 1])->shouldBeAnObjectContainingKeyAndValue('status', 'created');
+        
+        $this->createCourse($user2Details->id, getCourseData($name))->shouldBeAnObjectContainingKeyAndValue('name', $name);
+        $this->createCourse($user2Details->id, getCourseData($name+1))->shouldBeAnObjectContainingKeyAndValue('name', $name+1);
+        $this->createCourse($user3Details->id, getCourseData($name+2))->shouldBeAnObjectContainingKeyAndValue('name', $name+2);
+        $this->createCourse($user4Details->id, getCourseData($name+3))->shouldBeAnObjectContainingKeyAndValue('name', $name+3);
+        
+        $this->getUserFriendCourses($user1Details->id)->shouldBeAnArrayWithItemCount(0);
+        
+        $this->createUserFriend($user1Details->id, ['friend_id' => $user2Details->id, 'access_level' => 0])->shouldBeAnObjectContainingKeyAndValue('status', 'created');
+        $this->createUserFriend($user1Details->id, ['friend_id' => $user3Details->id, 'access_level' => 0])->shouldBeAnObjectContainingKeyAndValue('status', 'created');
+        
+        $this->getUserFriendCourses($user1Details->id)->shouldBeAnArrayWithValues('name', [$name, $name+1, $name+2]);
+    }
+    
+    function it_can_get_statistics()
+    {
+        $this->beConstructedWith(config('API_URI'), config('API_ADMIN_KEY'));
+        $this->getStats(config('USER_ID'))->shouldBeAnObjectContainingKey('greens_in_regulation');
+    }
+    
+    function it_can_get_statistics_for_a_course()
+    {
+        $this->beConstructedWith(config('API_URI'), config('API_ADMIN_KEY'));
+        
+        $course = $this->createCourse(config('USER_ID'), getCourseData(time()))->getWrappedObject();
+        
+        $this->getStats(config('USER_ID'), $course->id)->shouldBeAnObjectContainingKey('greens_in_regulation');
+    }
+    
+    function it_can_get_the_list_of_handicap_systems()
+    {
+        $this->beConstructedWith(config('API_URI'), config('API_ADMIN_KEY'));
+        $this->getHandicapSystems()->shouldBeAnArrayWithItemCount(6);
+    }
+    
+    function it_can_get_the_list_of_tees()
+    {
+        $this->beConstructedWith(config('API_URI'), config('API_ADMIN_KEY'));
         $this->getTees()->shouldBeAnArrayWithItemCount(9);
     }
 
@@ -152,32 +198,13 @@ class ClientSpec extends ObjectBehavior
         $name = time();
         $this->createUser(['realname' => $name, 'oauth_id' => md5($name), 'oauth_provider' => 'test'])->shouldBeAnObjectContainingKeyAndValue('realname', $name);
     }
-    
-    function it_can_get_a_list_of_friend_courses()
-    {
-        $this->beConstructedWith(config('API_URI'), config('API_ADMIN_KEY'));
-        
-        $name = time();
-        $user1Details = $this->createUser(['realname' => $name, 'oauth_id' => md5($name), 'oauth_provider' => 'test'])->getWrappedObject();
-        $user2Details = $this->createUser(['realname' => $name, 'oauth_id' => md5($name), 'oauth_provider' => 'test'])->getWrappedObject();
-        $user3Details = $this->createUser(['realname' => $name, 'oauth_id' => md5($name), 'oauth_provider' => 'test'])->getWrappedObject();
-        $user4Details = $this->createUser(['realname' => $name, 'oauth_id' => md5($name), 'oauth_provider' => 'test'])->getWrappedObject();
-        
-        $this->createUserFriend($user1Details->id, ['friend_id' => $user2Details->id, 'access_level' => 2])->shouldBeAnObjectContainingKeyAndValue('status', 'created');
-        $this->createUserFriend($user1Details->id, ['friend_id' => $user3Details->id, 'access_level' => 2])->shouldBeAnObjectContainingKeyAndValue('status', 'created');
-        
-        $this->createCourse($user2Details->id, getCourseData($name))->shouldBeAnObjectContainingKeyAndValue('name', $name);
-        $this->createCourse($user2Details->id, getCourseData($name+1))->shouldBeAnObjectContainingKeyAndValue('name', $name+1);
-        $this->createCourse($user3Details->id, getCourseData($name+2))->shouldBeAnObjectContainingKeyAndValue('name', $name+2);
-        $this->createCourse($user4Details->id, getCourseData($name+3))->shouldBeAnObjectContainingKeyAndValue('name', $name+3);
-        
-        $this->getUserFriendCourses($user1Details->id)->shouldBeAnArrayWithItemCount(3);
-        $this->getUserFriendCourses($user1Details->id)->shouldBeAnArrayWithValues('name', [$name, $name+1, $name+2]);
-    }
 
     public function getMatchers()
     {
         return [
+            'beAnObjectContainingKey' => function ($subject, $key) {
+                return !empty($subject) && property_exists($subject, $key);
+            },
             'beAnObjectContainingKeyAndValue' => function ($subject, $key, $value) {
                 return !empty($subject) && property_exists($subject, $key) && $subject->$key == $value;
             },

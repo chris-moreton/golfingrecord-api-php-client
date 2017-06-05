@@ -47,14 +47,34 @@ class Client
         return $this->simpleGet('/v1/tees');
     }
     
-    public function getStats($id)
+    public function getStats($id, $courseId = null, $startDate = null, $endDate = null)
     {
-        return $this->simpleGet('/v1/users/' . $id . '/stats');
+        $endpoint = '/v1/users/' . $id . '/statistics';
+        if (!empty($courseId)) {
+            $endpoint .= '/' . $courseId;
+        }
+        if (!empty($startDate)) {
+            $endpoint .= '?start_date=' . $startDate;
+        }
+        if (!empty($endDate)) {
+            if (strpos($endpoint, '?') !== false) {
+                $endpoint .= '&';
+            } else {
+                $endpoint .= '?';
+            }
+            $endpoint .= 'end_date=' . $endDate;
+        }
+
+        return $this->simpleGet($endpoint);
     }
     
-    public function getHandicap($id)
+    public function getHandicap($id, $courseId = null)
     {
-        return $this->simpleGet('/v1/users/' . $id . '/handicap');
+        $endpoint = '/v1/users/' . $id . '/handicap';
+        if (!empty($courseId)) {
+            $endpoint .= '/' . $courseId;
+        }
+        return $this->simpleGet($endpoint);
     }
     
     public function getPayments($id)
@@ -71,6 +91,16 @@ class Client
     {
         return $this->simpleGet('/v1/users/' . $id . '/courses/' . $courseId . '/rounds');
     }
+
+    public function getRound($id, $courseId, $roundId)
+    {
+        return $this->simpleGet('/v1/users/' . $id . '/courses/' . $courseId . '/rounds/' . $roundId);
+    }
+
+    public function compareRoundWithFriends($id, $courseId, $roundId)
+    {
+        return $this->simpleGet('/v1/users/' . $id . '/courses/' . $courseId . '/rounds/' . $roundId . '/compare');
+    }
     
     public function updateRound($userId, $courseId, $roundId, array $details)
     {
@@ -85,6 +115,11 @@ class Client
     public function getFriends($id)
     {
         return $this->simpleGet('/v1/users/' . $id . '/friends');
+    }
+    
+    public function getHandicapSystems()
+    {
+        return $this->simpleGet('/v1/handicap-systems');
     }
     
     public function courseSearch($q)
