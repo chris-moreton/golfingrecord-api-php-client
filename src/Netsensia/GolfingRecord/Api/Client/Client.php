@@ -122,6 +122,11 @@ class Client
         return $this->simpleGet('/v1/handicap-systems');
     }
     
+    public function getAccessLevels()
+    {
+        return $this->simpleGet('/v1/access-levels');
+    }
+    
     public function courseSearch($q)
     {
         return $this->simpleGet('/v1/search/courses?q=' . $q);
