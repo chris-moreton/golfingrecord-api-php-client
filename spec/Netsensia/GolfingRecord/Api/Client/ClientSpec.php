@@ -12,6 +12,19 @@ class ClientSpec extends ObjectBehavior
         $this->shouldHaveType('Netsensia\GolfingRecord\Api\Client\Client');
     }
 
+    function it_can_create_and_update_a_user_friend_relationship()
+    {
+        $this->beConstructedWith(config('API_URI'), config('API_ADMIN_KEY'));
+        
+        $name = time();
+        $user1Details = $this->createUser(['realname' => $name, 'oauth_id' => md5($name), 'oauth_provider' => 'test'])->getWrappedObject();
+        $user2Details = $this->createUser(['realname' => $name, 'oauth_id' => md5($name), 'oauth_provider' => 'test'])->getWrappedObject();
+        
+        $this->createUserFriend($user1Details->id, ['friend_id' => $user2Details->id, 'access_level' => 2])->shouldBeAnObjectContainingKeyAndValue('status', 'created');
+        $this->createUserFriend($user1Details->id, ['friend_id' => $user2Details->id, 'access_level' => 1])->shouldBe(false);
+        $this->updateUserFriendAccessLevel($user1Details->id, $user2Details->id, 1)->shouldBeAnObjectContainingKeyAndValue('status', 'updated');
+    }
+    
     function it_can_get_a_list_of_friend_courses()
     {
         $this->beConstructedWith(config('API_URI'), config('API_ADMIN_KEY'));
@@ -136,18 +149,6 @@ class ClientSpec extends ObjectBehavior
         sleep(2);
         $this->courseSearch($name)->shouldBeAnArrayWithItemCount(1);
         
-    }
-    
-    function it_can_create_a_user_friend_relationship()
-    {
-        $this->beConstructedWith(config('API_URI'), config('API_ADMIN_KEY'));
-        
-        $name = time();
-        $user1Details = $this->createUser(['realname' => $name, 'oauth_id' => md5($name), 'oauth_provider' => 'test'])->getWrappedObject();
-        $user2Details = $this->createUser(['realname' => $name, 'oauth_id' => md5($name), 'oauth_provider' => 'test'])->getWrappedObject();
-        
-        $this->createUserFriend($user1Details->id, ['friend_id' => $user2Details->id, 'access_level' => 2])->shouldBeAnObjectContainingKeyAndValue('status', 'created');
-        $this->createUserFriend($user1Details->id, ['friend_id' => $user2Details->id, 'access_level' => 1])->shouldBe(false);
     }
     
     function it_can_create_and_retrieve_user_friends()

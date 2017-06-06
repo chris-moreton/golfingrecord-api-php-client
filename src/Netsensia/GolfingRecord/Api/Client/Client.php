@@ -137,6 +137,13 @@ class Client
         return $this->simpleCreate('/v1/users/' . $id . '/friends', $details);
     }
 
+    public function updateUserFriendAccessLevel($id, $friendId, $accessLevel)
+    {
+        return $this->simpleUpdate('/v1/users/' . $id . '/friends/' . $friendId, [
+            'access_level' => $accessLevel
+        ]);
+    }
+    
     public function createUser(array $details)
     {
         return $this->simpleCreate('/v1/users', $details);
