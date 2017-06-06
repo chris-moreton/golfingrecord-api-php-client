@@ -66,6 +66,12 @@ class ClientSpec extends ObjectBehavior
         $this->getStats(config('USER_ID'), $course->id)->shouldBeAnObjectContainingKey('greens_in_regulation');
     }
     
+    function it_can_get_the_list_of_access_levels()
+    {
+        $this->beConstructedWith(config('API_URI'), config('API_ADMIN_KEY'));
+        $this->getAccessLevels()->shouldBeAnArrayWithItemCount(4);
+    }
+        
     function it_can_get_the_list_of_handicap_systems()
     {
         $this->beConstructedWith(config('API_URI'), config('API_ADMIN_KEY'));
