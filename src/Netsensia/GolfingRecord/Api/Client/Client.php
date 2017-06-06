@@ -31,6 +31,11 @@ class Client
     {
         return $this->simpleGet('/v1/users/' . $id . '/friends');
     }
+    
+    public function getUserFriend($id, $friendId)
+    {
+        return $this->simpleGet('/v1/users/' . $id . '/friends/' . $friendId);
+    }
 
     public function getUserFriendCourses($id)
     {
@@ -112,11 +117,6 @@ class Client
         return $this->simpleDelete('/v1/users/' . $userId . '/courses/' . $courseId . '/rounds/' . $roundId);
     }
 
-    public function getFriends($id)
-    {
-        return $this->simpleGet('/v1/users/' . $id . '/friends');
-    }
-    
     public function getHandicapSystems()
     {
         return $this->simpleGet('/v1/handicap-systems');
