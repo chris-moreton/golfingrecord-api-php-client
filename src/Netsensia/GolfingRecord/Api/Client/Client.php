@@ -36,6 +36,11 @@ class Client
     {
         return $this->simpleGet('/v1/users/' . $id . '/friends/' . $friendId);
     }
+    
+    public function deleteUserFriend($id, $friendId)
+    {
+        return $this->simpleDelete('/v1/users/' . $id . '/friends/' . $friendId);
+    }
 
     public function getUserFriendCourses($id)
     {

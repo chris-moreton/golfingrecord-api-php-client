@@ -12,7 +12,7 @@ class ClientSpec extends ObjectBehavior
         $this->shouldHaveType('Netsensia\GolfingRecord\Api\Client\Client');
     }
 
-    function it_can_create_and_update_a_user_friend_relationship()
+    function it_can_create_update_and_delete_a_user_friend_relationship()
     {
         $this->beConstructedWith(config('API_URI'), config('API_ADMIN_KEY'));
         
@@ -21,8 +21,14 @@ class ClientSpec extends ObjectBehavior
         $user2Details = $this->createUser(['realname' => $name, 'oauth_id' => md5($name), 'oauth_provider' => 'test'])->getWrappedObject();
         
         $this->createUserFriend($user1Details->id, ['friend_id' => $user2Details->id, 'access_level' => 2])->shouldBeAnObjectContainingKeyAndValue('status', 'created');
+        $this->getUserFriend($user1Details->id, $user2Details->id)->shouldBeAnObjectContainingKeyAndValue('access_level', 2);
         $this->createUserFriend($user1Details->id, ['friend_id' => $user2Details->id, 'access_level' => 1])->shouldBe(false);
+        $this->getUserFriend($user1Details->id, $user2Details->id)->shouldBeAnObjectContainingKeyAndValue('access_level', 2);
         $this->updateUserFriendAccessLevel($user1Details->id, $user2Details->id, 1)->shouldBeAnObjectContainingKeyAndValue('status', 'updated');
+        $this->getUserFriend($user1Details->id, $user2Details->id)->shouldBeAnObjectContainingKeyAndValue('access_level', 1);
+        
+        $this->deleteUserFriend($user1Details->id, $user2Details->id)->shouldBeAnObjectContainingKeyAndValue('status', 'deleted');
+        $this->getUserFriend($user1Details->id, $user2Details->id)->shouldBe(false);
     }
     
     function it_can_get_a_list_of_friend_courses()
@@ -157,23 +163,6 @@ class ClientSpec extends ObjectBehavior
         
     }
     
-    function it_can_create_and_retrieve_user_friends()
-    {
-        $pagination = PHP_INT_MAX;
-
-        $this->beConstructedWith(config('API_URI'), config('API_USER_KEY'));
-
-        $name = time();
-
-        $courseCount = count($this->getUserCourses(config('USER_ID'))->getWrappedObject()->data);
-
-        $this->createCourse(config('USER_ID'), getCourseData($name))->shouldBeAnObjectContainingKeyAndValue('name', $name);
-        $this->getUserCourses(config('USER_ID'))->shouldBeAResultSetWithItemCount($courseCount + 1 < $pagination ? $courseCount + 1 : $pagination);
-        $this->createCourse(config('USER_ID'), getCourseData(++$name))->shouldBeAnObjectContainingKeyAndValue('name', $name);
-        $this->createCourse(config('USER_ID'), getCourseData(++$name))->shouldBeAnObjectContainingKeyAndValue('name', $name);
-        $this->getUserCourses(config('USER_ID'))->shouldBeAResultSetWithItemCount($courseCount + 3 < $pagination ? $courseCount + 3 : $pagination);
-    }
-
     function it_will_return_diagnostics_and_they_will_be_good()
     {
         $this->beConstructedWith(config('API_URI'), config('API_ADMIN_KEY'));
